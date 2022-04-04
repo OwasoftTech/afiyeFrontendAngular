@@ -12,6 +12,7 @@ import {
   removeEmptyKeysFromObject,
   mergeRecursive,
 } from "src/app/shared/utils/common-functions";
+import { HttpParams } from "@angular/common/http";
 //import { debug } from 'console';
 
 @Component({
@@ -223,10 +224,11 @@ export class PropertySharedComponent implements OnInit {
       this.toasterService.error("Please Login First");
       return;
     }
+    let params: HttpParams = new HttpParams();
+    params = params.append(`ids[]`, property.id);
+    
     this.requestService
-      .sendRequest(PropertyUrls.DELETE_POST_PROPERTY, "delete_with_body", {
-        ids: [property.id],
-      })
+      .sendRequest(PropertyUrls.DELETE_POST_PROPERTY, "delete_with_body", params)
       .subscribe(
         (res) => {
           if (res.status) {

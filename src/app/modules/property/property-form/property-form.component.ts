@@ -12,6 +12,7 @@ import { Observable, ObservableInput, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, tap, switchMap, map, catchError } from 'rxjs/operators';
 import { AgentUrl } from 'src/app/pages/content-pages/agent-list/agent-url.enum';
 import { isObject } from 'util';
+import { HttpParams } from '@angular/common/http';
 declare var $: any;
 @Component({
   selector: 'app-property-form',
@@ -638,7 +639,11 @@ export class PropertyFormComponent implements OnInit, AfterViewInit {
 
   deletePropertyImage(image, i) {
     if (image.hasOwnProperty('media_id')) {
-      this.requestService.sendRequest(PropertyUrls.DELETE_POST, 'delete_with_body', { ids: JSON.stringify([image.media_id]) }).subscribe(res => {
+      
+      let params: HttpParams = new HttpParams();
+      params = params.append(`ids[]`, image.media_id);
+
+      this.requestService.sendRequest(PropertyUrls.DELETE_POST, 'delete_with_body', params).subscribe(res => {
         if (res.status) {
           this.toasterService.success(res.message, "Success");
           this.images.splice(i, 1)

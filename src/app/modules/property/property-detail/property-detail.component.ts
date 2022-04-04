@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ChatUrls } from '../../inbox/messages/chat-urls.enum';
 import { ChatModalComponent } from '../../inbox/chat-modal/chat-modal.component';
 import { AgentUrl } from '../../../pages/content-pages/agent-list/agent-url.enum';
+import { HttpParams } from '@angular/common/http';
 declare var $: any;
 @Component({
     selector: 'app-property-detail',
@@ -148,7 +149,9 @@ export class PropertyDetailComponent implements OnInit {
             this.toasterService.error("You are mot authorized to do it");
             return;
         }
-        this.requestService.sendRequest(PropertyUrls.DELETE_POST_PROPERTY, 'delete_with_body', { ids: [this.singleProperty.id] }).subscribe(res => {
+        let params: HttpParams = new HttpParams();
+        params = params.append(`ids[]`,this.singleProperty.id);
+        this.requestService.sendRequest(PropertyUrls.DELETE_POST_PROPERTY, 'delete_with_body', params).subscribe(res => {
             if (res.status) {
                 this.toasterService.success(res.message, "Success");
             } else {

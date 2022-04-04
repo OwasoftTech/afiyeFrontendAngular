@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Location, LocationStrategy } from "@angular/common";
 import { Router } from "@angular/router";
 import { Config } from "src/app/config/config";
@@ -41,7 +41,11 @@ export class RequestService {
 
   sendRequest(url, type, formData?): Observable<any> {
     const apiUrl = this.makeUrl(url);
-    const params = makeParamsFromFormData(formData || {});
+
+    let params =  makeParamsFromFormData(formData || {});
+    if ([PropertyUrls.DELETE_POST_PROPERTY, PropertyUrls.DELETE_POST].includes(url)) {
+      params = formData;
+    }
 
 	const addToken = [
 		PropertyUrls.DELETE_POST, ChatUrls.CHAT_HEADS_GET_ALL, ChatUrls.ADD_POST, ChatUrls.ALL_GET,
